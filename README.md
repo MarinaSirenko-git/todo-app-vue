@@ -1,6 +1,6 @@
-# project
+# Todo app
 
-## Project setup
+## Todo app setup
 ```
 npm install
 ```
