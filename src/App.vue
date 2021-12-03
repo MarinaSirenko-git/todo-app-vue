@@ -1,17 +1,50 @@
+// ко всему что возвращается в data обращаемся через this
+// методы жизненного цикла тоже есть
+
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <h1>Todo List</h1>
+    <hr>
+    <AddTodoForm
+    v-on:add-todo="handleFormSubmit" 
+    />
+    <TodoList 
+      v-bind:todos="todos"
+      v-on:remove-todo="handleDeleteBtnClick" 
+    />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+
+import TodoList from '@/components/TodoList'
+import AddTodoForm from '@/components/AddTodoForm'
+
 
 export default {
   name: 'App',
+  data() {
+    return {
+      todos: []
+    }
+  },
+  async mounted() {
+    const res = await fetch('https://jsonplaceholder.typicode.com/todos')
+    if (!res.ok) throw new Error(`Ошибка: ${res.status}`)
+    const todoArr = await res.json()
+    this.todos = todoArr
+  },
   components: {
-    HelloWorld
+    TodoList,
+    AddTodoForm
+  },
+  methods: {
+    handleDeleteBtnClick(id) {
+      this.todos = this.todos.filter((item) => item.id !== id)
+    },
+    handleFormSubmit(data) {
+      this.todos.push(data)
+    }
   }
 }
 </script>
